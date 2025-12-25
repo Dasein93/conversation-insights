@@ -415,7 +415,7 @@ Format your response as a structured analysis. Be specific and provide examples 
     const data = await response.json();
     const analysis = data.choices?.[0]?.message?.content;
 
-    console.log(`${analysisType} analysis completed successfully`);
+    console.log(`${analysisType} analysis completed. Content type: ${typeof analysis}, Content preview: ${analysis ? String(analysis).substring(0, 200) : 'NULL/EMPTY'}`);
 
     return new Response(JSON.stringify({ analysis }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
