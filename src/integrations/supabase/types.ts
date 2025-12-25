@@ -16,29 +16,35 @@ export type Database = {
     Tables: {
       conversations: {
         Row: {
+          conversation_date: string
           conversation_number: number
           created_at: string
           id: string
           language_analysis: string | null
           memory_analysis: string | null
+          name: string
           raw_transcript: string
           updated_at: string
         }
         Insert: {
+          conversation_date?: string
           conversation_number?: number
           created_at?: string
           id?: string
           language_analysis?: string | null
           memory_analysis?: string | null
+          name?: string
           raw_transcript: string
           updated_at?: string
         }
         Update: {
+          conversation_date?: string
           conversation_number?: number
           created_at?: string
           id?: string
           language_analysis?: string | null
           memory_analysis?: string | null
+          name?: string
           raw_transcript?: string
           updated_at?: string
         }

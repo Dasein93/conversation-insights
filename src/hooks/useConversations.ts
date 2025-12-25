@@ -13,7 +13,7 @@ export function useConversations() {
     const { data, error } = await supabase
       .from("conversations")
       .select("*")
-      .order("conversation_number", { ascending: false });
+      .order("conversation_date", { ascending: false });
 
     if (error) {
       console.error("Error fetching conversations:", error);
@@ -94,14 +94,18 @@ export function useConversations() {
     }
   };
 
-  const submitTranscript = async (transcript: string) => {
+  const submitTranscript = async (transcript: string, name: string, date: string) => {
     setIsLoading(true);
 
     try {
-      // Insert new conversation
+      // Insert new conversation with name and date
       const { data, error } = await supabase
         .from("conversations")
-        .insert({ raw_transcript: transcript })
+        .insert({ 
+          raw_transcript: transcript,
+          name: name,
+          conversation_date: date || new Date().toISOString().split('T')[0]
+        })
         .select()
         .single();
 
@@ -120,7 +124,7 @@ export function useConversations() {
 
       toast({
         title: "Transcript Submitted",
-        description: `Conversation #${newConversation.conversation_number} created. Running analyses...`,
+        description: `Conversation for ${name} created. Running analyses...`,
       });
 
       // Run both analyses in parallel

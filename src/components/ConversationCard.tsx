@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { ChevronDown, ChevronUp, Clock, FileText, Trash2 } from "lucide-react";
+import { ChevronDown, ChevronUp, Clock, FileText, Trash2, User, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { AnalysisSection } from "./AnalysisSection";
 import type { Conversation, AnalysisState } from "@/types/conversation";
+import { format } from "date-fns";
 
 interface ConversationCardProps {
   conversation: Conversation;
@@ -15,12 +16,7 @@ export function ConversationCard({ conversation, analysisState, onDelete }: Conv
   const [isExpanded, setIsExpanded] = useState(true);
   const [showTranscript, setShowTranscript] = useState(false);
 
-  const formattedDate = new Date(conversation.created_at).toLocaleString("en-US", {
-    month: "short",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+  const formattedConversationDate = format(new Date(conversation.conversation_date), "MMM d, yyyy");
 
   const memoryStatus = analysisState?.memory || (conversation.memory_analysis ? "complete" : "idle");
   const languageStatus = analysisState?.language || (conversation.language_analysis ? "complete" : "idle");
@@ -29,13 +25,17 @@ export function ConversationCard({ conversation, analysisState, onDelete }: Conv
     <div className="analysis-card animate-fade-in">
       <div className="p-4 border-b border-border">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 flex-wrap">
             <Badge variant="outline" className="font-mono text-xs">
               #{conversation.conversation_number}
             </Badge>
+            <div className="flex items-center gap-1.5 text-xs font-medium text-foreground">
+              <User className="h-3 w-3" />
+              {conversation.name}
+            </div>
             <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-              <Clock className="h-3 w-3" />
-              {formattedDate}
+              <Calendar className="h-3 w-3" />
+              {formattedConversationDate}
             </div>
           </div>
           <div className="flex items-center gap-2">
