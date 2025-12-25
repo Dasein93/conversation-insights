@@ -6,6 +6,13 @@ interface MemoryEventsTableProps {
   content: string;
 }
 
+function stripMarkdownCodeBlock(text: string): string {
+  // Remove ```json ... ``` or ``` ... ``` wrappers
+  const codeBlockRegex = /^```(?:json)?\s*\n?([\s\S]*?)\n?```$/;
+  const match = text.trim().match(codeBlockRegex);
+  return match ? match[1].trim() : text.trim();
+}
+
 export function MemoryEventsTable({ content }: MemoryEventsTableProps) {
   const { events, error } = useMemo(() => {
     if (!content || content === "null") {
@@ -13,7 +20,8 @@ export function MemoryEventsTable({ content }: MemoryEventsTableProps) {
     }
 
     try {
-      const parsed = JSON.parse(content);
+      const cleanedContent = stripMarkdownCodeBlock(content);
+      const parsed = JSON.parse(cleanedContent);
       
       if (Array.isArray(parsed)) {
         return { events: parsed as MemoryEvent[], error: null };
