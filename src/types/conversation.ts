@@ -1,6 +1,8 @@
 export interface Conversation {
   id: string;
   conversation_number: number;
+  name: string;
+  conversation_date: string;
   raw_transcript: string;
   memory_analysis: string | null;
   language_analysis: string | null;
