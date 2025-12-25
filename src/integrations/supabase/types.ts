@@ -14,7 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      conversations: {
+        Row: {
+          conversation_number: number
+          created_at: string
+          id: string
+          language_analysis: string | null
+          memory_analysis: string | null
+          raw_transcript: string
+          updated_at: string
+        }
+        Insert: {
+          conversation_number?: number
+          created_at?: string
+          id?: string
+          language_analysis?: string | null
+          memory_analysis?: string | null
+          raw_transcript: string
+          updated_at?: string
+        }
+        Update: {
+          conversation_number?: number
+          created_at?: string
+          id?: string
+          language_analysis?: string | null
+          memory_analysis?: string | null
+          raw_transcript?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
