@@ -1,6 +1,7 @@
 import { Loader2, Brain, MessageSquare, CheckCircle, AlertCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { MemoryEventsTable } from "./MemoryEventsTable";
+import { LanguageAnalysisView } from "./LanguageAnalysisView";
 
 interface AnalysisSectionProps {
   title: string;
@@ -66,9 +67,7 @@ export function AnalysisSection({ title, type, content, status }: AnalysisSectio
           type === "memory" ? (
             <MemoryEventsTable content={content} />
           ) : (
-            <div className="prose-analysis text-muted-foreground whitespace-pre-wrap">
-              {content}
-            </div>
+            <LanguageAnalysisView content={content} />
           )
         ) : (
           <p className="text-sm text-muted-foreground italic">
