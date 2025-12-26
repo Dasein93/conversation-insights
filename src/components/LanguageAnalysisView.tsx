@@ -34,9 +34,25 @@ interface LanguageAnalysisViewProps {
 }
 
 function stripMarkdownCodeBlock(text: string): string {
-  const codeBlockRegex = /^```(?:json)?\s*\n?([\s\S]*?)\n?```$/;
-  const match = text.trim().match(codeBlockRegex);
-  return match ? match[1].trim() : text.trim();
+  let cleaned = text.trim();
+  
+  // Remove ```json ... ``` or ``` ... ``` wrappers (handles various formats)
+  // First try exact match at start/end
+  const exactMatch = cleaned.match(/^```(?:json)?\s*\n?([\s\S]*?)\n?```$/);
+  if (exactMatch) {
+    return exactMatch[1].trim();
+  }
+  
+  // Try to find JSON block anywhere in the text
+  const blockMatch = cleaned.match(/```(?:json)?\s*\n?([\s\S]*?)\n?```/);
+  if (blockMatch) {
+    return blockMatch[1].trim();
+  }
+  
+  // Remove leading/trailing ``` if present but not properly formatted
+  cleaned = cleaned.replace(/^```(?:json)?\s*\n?/, '').replace(/\n?```$/, '');
+  
+  return cleaned.trim();
 }
 
 const categoryColors: Record<string, string> = {
