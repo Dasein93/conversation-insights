@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import { TranscriptInput } from "@/components/TranscriptInput";
 import { ConversationCard } from "@/components/ConversationCard";
+import { AggregatedMemoryView } from "@/components/AggregatedMemoryView";
 import { useConversations } from "@/hooks/useConversations";
 import { MessageSquareText } from "lucide-react";
 import {
@@ -10,7 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 const Index = () => {
   const { conversations, isLoading, analysisStates, submitTranscript, deleteConversation } =
     useConversations();
@@ -69,54 +70,67 @@ const Index = () => {
 
           {/* Results Panel */}
           <div className="space-y-4">
-            <div className="flex items-center justify-between gap-4">
-              <h2 className="text-sm font-medium text-foreground">
-                Analyzed Conversations
-              </h2>
-              <div className="flex items-center gap-3">
-                <Select value={selectedName} onValueChange={setSelectedName}>
-                  <SelectTrigger className="w-[180px] h-8 text-xs">
-                    <SelectValue placeholder="Filter by name" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Names</SelectItem>
-                    {uniqueNames.map((name) => (
-                      <SelectItem key={name} value={name}>
-                        {name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <span className="text-xs text-muted-foreground whitespace-nowrap">
-                  {filteredConversations.length} of {conversations.length}
-                </span>
-              </div>
-            </div>
+            <Tabs defaultValue="conversations" className="w-full">
+              <TabsList className="grid w-full grid-cols-2 mb-4">
+                <TabsTrigger value="conversations">Conversations</TabsTrigger>
+                <TabsTrigger value="memory">All Memories</TabsTrigger>
+              </TabsList>
 
-            {filteredConversations.length === 0 ? (
-              <div className="analysis-card p-12 text-center">
-                <div className="mx-auto h-12 w-12 rounded-full bg-muted flex items-center justify-center mb-4">
-                  <MessageSquareText className="h-6 w-6 text-muted-foreground" />
+              <TabsContent value="conversations" className="space-y-4">
+                <div className="flex items-center justify-between gap-4">
+                  <h2 className="text-sm font-medium text-foreground">
+                    Analyzed Conversations
+                  </h2>
+                  <div className="flex items-center gap-3">
+                    <Select value={selectedName} onValueChange={setSelectedName}>
+                      <SelectTrigger className="w-[180px] h-8 text-xs">
+                        <SelectValue placeholder="Filter by name" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All Names</SelectItem>
+                        {uniqueNames.map((name) => (
+                          <SelectItem key={name} value={name}>
+                            {name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <span className="text-xs text-muted-foreground whitespace-nowrap">
+                      {filteredConversations.length} of {conversations.length}
+                    </span>
+                  </div>
                 </div>
-                <h3 className="text-sm font-medium text-foreground mb-1">
-                  {selectedName !== "all" ? "No conversations for this person" : "No conversations yet"}
-                </h3>
-                <p className="text-xs text-muted-foreground">
-                  {selectedName !== "all" ? "Try selecting a different name" : "Paste a transcript to get started"}
-                </p>
-              </div>
-            ) : (
-              <div className="space-y-4">
-                {filteredConversations.map((conversation) => (
-                  <ConversationCard
-                    key={conversation.id}
-                    conversation={conversation}
-                    analysisState={analysisStates[conversation.id]}
-                    onDelete={deleteConversation}
-                  />
-                ))}
-              </div>
-            )}
+
+                {filteredConversations.length === 0 ? (
+                  <div className="analysis-card p-12 text-center">
+                    <div className="mx-auto h-12 w-12 rounded-full bg-muted flex items-center justify-center mb-4">
+                      <MessageSquareText className="h-6 w-6 text-muted-foreground" />
+                    </div>
+                    <h3 className="text-sm font-medium text-foreground mb-1">
+                      {selectedName !== "all" ? "No conversations for this person" : "No conversations yet"}
+                    </h3>
+                    <p className="text-xs text-muted-foreground">
+                      {selectedName !== "all" ? "Try selecting a different name" : "Paste a transcript to get started"}
+                    </p>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {filteredConversations.map((conversation) => (
+                      <ConversationCard
+                        key={conversation.id}
+                        conversation={conversation}
+                        analysisState={analysisStates[conversation.id]}
+                        onDelete={deleteConversation}
+                      />
+                    ))}
+                  </div>
+                )}
+              </TabsContent>
+
+              <TabsContent value="memory">
+                <AggregatedMemoryView conversations={conversations} />
+              </TabsContent>
+            </Tabs>
           </div>
         </div>
       </main>
